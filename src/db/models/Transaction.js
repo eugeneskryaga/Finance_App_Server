@@ -18,10 +18,10 @@ const transactionSchema = new Schema(
     note: {
       type: String,
     },
-    date: {
-      type: Date,
-      required: true,
-    },
+    // date: {
+    //   type: Date,
+    //   required: true,
+    // },
   },
   { timestamps: true, versionKey: false },
 );
