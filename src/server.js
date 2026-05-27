@@ -1,5 +1,5 @@
 import express from "express";
-import transactionsRouter from "./routers/transactionsRouter.js";
+import transactionsRouter from "./routers/transactionsRouters.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDb } from "./db/connectDb.js";
