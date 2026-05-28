@@ -4,6 +4,7 @@ import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDb } from "./db/connectDb.js";
 import "dotenv/config";
+import { errors } from "celebrate";
 
 const PORT = process.env.PORT;
 
@@ -15,6 +16,7 @@ server.use(transactionsRouter);
 
 server.use(notFoundHandler);
 
+server.use(errors());
 server.use(errorHandler);
 
 await connectDb();

@@ -1,6 +1,9 @@
 import { Transaction } from "../db/models/Transaction.js";
 
-export const getTransactionsService = () => Transaction.find();
+export const getTransactionsService = ({ page, perPage }) => {
+  const skip = (page - 1) * perPage;
+  return Transaction.find().skip(skip).limit(perPage);
+};
 
 export const getTransactionsByIdService = id => Transaction.findById(id);
 

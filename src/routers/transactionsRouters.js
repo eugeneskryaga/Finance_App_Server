@@ -1,4 +1,11 @@
 import { Router } from "express";
+import { celebrate } from "celebrate";
+import {
+  createTransactionSchema,
+  getTransactionsSchema,
+  idSchema,
+  updateTransactionSchema,
+} from "../validation/transactionValidation.js";
 import {
   deleteTransaction,
   getTransactionByID,
@@ -10,11 +17,24 @@ import {
 
 const router = Router();
 
-router.get("/transactions", getTransactions);
-router.get("/transactions/:id", getTransactionByID);
-router.post("/transactions", postTransaction);
-router.delete("/transactions/:id", deleteTransaction);
-router.patch("/transactions/:id", patchTransaction);
-router.put("/transactions/:id", putTransaction);
+router.get("/transactions", celebrate(getTransactionsSchema), getTransactions);
+router.get("/transactions/:id", celebrate(idSchema), getTransactionByID);
+router.post(
+  "/transactions",
+  celebrate(createTransactionSchema),
+  postTransaction,
+);
+router.delete("/transactions/:id", celebrate(idSchema), deleteTransaction);
+router.patch(
+  "/transactions/:id",
+  celebrate(updateTransactionSchema),
+  patchTransaction,
+);
+router.put(
+  "/transactions/:id",
+  celebrate(createTransactionSchema),
+  celebrate(idSchema),
+  putTransaction,
+);
 
 export default router;
