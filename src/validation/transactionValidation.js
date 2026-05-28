@@ -7,8 +7,11 @@ const validateId = (id, utils) =>
 
 export const getTransactionsSchema = {
   [Segments.QUERY]: Joi.object({
-    page: Joi.number().integer().min(1),
-    perPage: Joi.number().integer().min(3).max(20),
+    page: Joi.number().integer().min(1).default(1),
+    perPage: Joi.number().integer().min(3).max(20).default(3),
+    sortBy: Joi.string().valid("type", "category", "amount").default("type"),
+    sortOrder: Joi.string().valid("asc", "desc").default("asc"),
+    category: Joi.string().valid(...CATEGORIES),
   }),
 };
 

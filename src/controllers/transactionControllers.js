@@ -9,10 +9,17 @@ import {
 import createHttpError from "http-errors";
 
 export const getTransactions = async (req, res) => {
-  const { page, perPage } = req.query;
+  const { page, perPage, sortBy, sortOrder, category } = req.query;
 
-  const transactions = await getTransactionsService({ page, perPage });
-  res.json(transactions);
+  const response = await getTransactionsService({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    category,
+  });
+
+  res.json(response);
 };
 
 export const getTransactionByID = async (req, res) => {
