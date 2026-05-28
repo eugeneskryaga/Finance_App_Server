@@ -11,7 +11,7 @@ export const getTransactionsSchema = {
     perPage: Joi.number().integer().min(3).max(20).default(3),
     sortBy: Joi.string().valid("type", "category", "amount").default("type"),
     sortOrder: Joi.string().valid("asc", "desc").default("asc"),
-    category: Joi.string().valid(...CATEGORIES),
+    category: Joi.string().valid(...CATEGORIES.income, ...CATEGORIES.expenses),
   }),
 };
 
@@ -20,21 +20,37 @@ export const createTransactionSchema = {
     type: Joi.string()
       .valid(...TYPES)
       .required(),
-    category: Joi.string()
-      .valid(...CATEGORIES)
-      .required(),
-    amount: Joi.number().min(1).required(),
+    category: Joi.when("type", {
+      is: "income",
+
+      then: Joi.string()
+        .valid(...CATEGORIES.income)
+        .required(),
+
+      otherwise: Joi.string()
+        .valid(...CATEGORIES.expenses)
+        .required(),
+    }),
+    amount: Joi.number().positive().required(),
     note: Joi.string().min(2).max(100),
+    date: Joi.date().required(),
   }),
 };
 
 export const updateTransactionSchema = {
   [Segments.BODY]: Joi.object({
     type: Joi.string().valid(...TYPES),
-    category: Joi.string().valid(...CATEGORIES),
-    amount: Joi.number().min(1),
+    category: Joi.when("type", {
+      is: "income",
+      then: Joi.string().valid(...CATEGORIES.income),
+      otherwise: Joi.string().valid(...CATEGORIES.expenses),
+    }),
+    amount: Joi.number().positive(),
     note: Joi.string().min(2).max(100),
-  }).min(1),
+    date: Joi.date(),
+  })
+    .min(1)
+    .with("category", "type"),
   [Segments.PARAMS]: Joi.object({
     id: Joi.string().custom(validateId).required(),
   }),

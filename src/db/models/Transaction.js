@@ -8,12 +8,14 @@ const transactionSchema = new Schema(
       type: String,
       enum: TYPES,
       required: true,
+      index: true,
     },
     category: {
       // "living","food","habits","road","entertainment","hobbies","subscriptions","donations", "shopping", "salary","freelance",
       type: String,
-      enum: CATEGORIES,
+      enum: [...CATEGORIES.income, ...CATEGORIES.expenses],
       required: true,
+      index: true,
     },
     amount: {
       type: Number,
@@ -22,10 +24,11 @@ const transactionSchema = new Schema(
     note: {
       type: String,
     },
-    // date: {
-    //   type: Date,
-    //   required: true,
-    // },
+    date: {
+      type: Date,
+      required: true,
+      index: true,
+    },
   },
   { timestamps: true, versionKey: false },
 );
