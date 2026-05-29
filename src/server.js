@@ -1,10 +1,11 @@
 import express from "express";
+import cors from "cors";
 import transactionsRouter from "./routers/transactionsRouters.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDb } from "./db/connectDb.js";
-import "dotenv/config";
 import { errors } from "celebrate";
+import "dotenv/config";
 
 const PORT = process.env.PORT;
 
