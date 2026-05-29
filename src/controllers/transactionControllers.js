@@ -9,14 +9,17 @@ import {
 import createHttpError from "http-errors";
 
 export const getTransactions = async (req, res) => {
-  const { page, perPage, sortBy, sortOrder, category } = req.query;
+  const { page, perPage, sortBy, sortOrder, search, startDate, endDate } =
+    req.query;
 
   const response = await getTransactionsService({
     page,
     perPage,
     sortBy,
     sortOrder,
-    category,
+    search,
+    startDate,
+    endDate,
   });
 
   res.json(response);

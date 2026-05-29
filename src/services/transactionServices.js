@@ -5,14 +5,33 @@ export const getTransactionsService = async ({
   perPage,
   sortBy,
   sortOrder,
-  category,
+  search,
+  startDate,
+  endDate,
 }) => {
   const skip = (page - 1) * perPage;
+  const filter = {};
 
-  const transactionsQuery = Transaction.find();
+  if (startDate || endDate) {
+    filter.date = {};
+  }
 
-  if (category) {
-    transactionsQuery.where("category").equals(category);
+  if (startDate) {
+    filter.date.$gte = new Date(startDate);
+  }
+
+  if (endDate) {
+    const end = new Date(endDate);
+    end.setDate(end.getDate() + 1);
+    filter.date.$lt = end;
+  }
+
+  const transactionsQuery = Transaction.find(filter);
+
+  if (search) {
+    transactionsQuery.where({
+      $text: { $search: search },
+    });
   }
 
   const [totalTransactions, transactions] = await Promise.all([
@@ -20,11 +39,11 @@ export const getTransactionsService = async ({
     transactionsQuery
       .skip(skip)
       .limit(perPage)
-      .sort({ [sortBy]: sortOrder }),
+      .sort({ [sortBy]: sortOrder === "asc" ? 1 : -1 }),
   ]);
 
   const totalPages = Math.ceil(totalTransactions / perPage);
-  const isNextPageExists = page !== totalPages;
+  const isNextPageExists = page < totalPages;
 
   return { transactions, totalTransactions, totalPages, isNextPageExists };
 };

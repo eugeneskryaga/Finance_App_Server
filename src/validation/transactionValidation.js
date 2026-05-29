@@ -9,9 +9,11 @@ export const getTransactionsSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(3).max(20).default(3),
-    sortBy: Joi.string().valid("type", "category", "amount").default("type"),
-    sortOrder: Joi.string().valid("asc", "desc").default("asc"),
-    category: Joi.string().valid(...CATEGORIES.income, ...CATEGORIES.expenses),
+    sortBy: Joi.string().valid("date").default("date"),
+    sortOrder: Joi.string().valid("asc", "desc").default("desc"),
+    search: Joi.string(),
+    startDate: Joi.date(),
+    endDate: Joi.date().min(Joi.ref("startDate")),
   }),
 };
 
@@ -22,11 +24,9 @@ export const createTransactionSchema = {
       .required(),
     category: Joi.when("type", {
       is: "income",
-
       then: Joi.string()
         .valid(...CATEGORIES.income)
         .required(),
-
       otherwise: Joi.string()
         .valid(...CATEGORIES.expenses)
         .required(),
