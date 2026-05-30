@@ -11,7 +11,7 @@ export const getTransactionsSchema = {
     perPage: Joi.number().integer().min(3).max(20).default(3),
     sortBy: Joi.string().valid("date").default("date"),
     sortOrder: Joi.string().valid("asc", "desc").default("desc"),
-    search: Joi.string(),
+    search: Joi.string().min(1).optional(),
     startDate: Joi.date(),
     endDate: Joi.date().min(Joi.ref("startDate")),
   }),

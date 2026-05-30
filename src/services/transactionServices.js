@@ -14,25 +14,25 @@ export const getTransactionsService = async ({
 
   if (startDate || endDate) {
     filter.date = {};
+
+    if (startDate) {
+      filter.date.$gte = new Date(startDate);
+    }
+
+    if (endDate) {
+      const end = new Date(endDate);
+      end.setDate(end.getDate() + 1);
+      filter.date.$lt = end;
+    }
   }
 
-  if (startDate) {
-    filter.date.$gte = new Date(startDate);
-  }
-
-  if (endDate) {
-    const end = new Date(endDate);
-    end.setDate(end.getDate() + 1);
-    filter.date.$lt = end;
+  if (search?.trim()) {
+    filter.$text = {
+      $search: search.trim(),
+    };
   }
 
   const transactionsQuery = Transaction.find(filter);
-
-  if (search) {
-    transactionsQuery.where({
-      $text: { $search: search },
-    });
-  }
 
   const [totalTransactions, transactions] = await Promise.all([
     transactionsQuery.clone().countDocuments(),
