@@ -45,7 +45,13 @@ export const getTransactionsService = async ({
   const totalPages = Math.ceil(totalTransactions / perPage);
   const isNextPageExists = page < totalPages;
 
-  return { transactions, totalTransactions, totalPages, isNextPageExists };
+  return {
+    transactions,
+    totalTransactions,
+    totalPages,
+    currentPage: page,
+    isNextPageExists,
+  };
 };
 
 export const getTransactionsByIdService = id => Transaction.findById(id);
