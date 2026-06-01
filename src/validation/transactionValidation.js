@@ -32,7 +32,7 @@ export const createTransactionSchema = {
         .required(),
     }),
     amount: Joi.number().positive().required(),
-    note: Joi.string().min(2).max(100),
+    note: Joi.string().max(100),
     date: Joi.date().required(),
   }),
 };
@@ -46,7 +46,7 @@ export const updateTransactionSchema = {
       otherwise: Joi.string().valid(...CATEGORIES.expenses),
     }),
     amount: Joi.number().positive(),
-    note: Joi.string().min(2).max(100),
+    note: Joi.string().max(100),
     date: Joi.date(),
   })
     .min(1)
