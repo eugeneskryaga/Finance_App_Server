@@ -8,6 +8,7 @@ import { errors } from "celebrate";
 import "dotenv/config";
 
 const PORT = process.env.PORT;
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS.split(",");
 
 const server = express();
 
@@ -15,7 +16,15 @@ server.use(express.json());
 
 server.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+
+      if (ALLOWED_ORIGINS.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Blocked by CORS due to untrusted origin"));
+      }
+    },
     credentials: true,
   }),
 );
