@@ -9,7 +9,9 @@ export const getTransactionsSchema = {
   [Segments.QUERY]: Joi.object({
     page: Joi.number().integer().min(1).default(1),
     perPage: Joi.number().integer().min(3).max(20).default(3),
-    sortBy: Joi.string().valid("date").default("date"),
+    sortBy: Joi.string()
+      .valid("date", "amount", "type", "category")
+      .default("date"),
     sortOrder: Joi.string().valid("asc", "desc").default("desc"),
     search: Joi.string().allow("").optional(),
     startDate: Joi.date(),
