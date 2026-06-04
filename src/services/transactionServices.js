@@ -56,8 +56,7 @@ export const getTransactionsService = async ({
 
 export const getTransactionsByIdService = id => Transaction.findById(id);
 
-export const deleteTransactionsService = id =>
-  Transaction.findByIdAndDelete(id);
+export const deleteTransactionService = id => Transaction.findByIdAndDelete(id);
 
 export const postTransactionsService = data => Transaction.create(data);
 

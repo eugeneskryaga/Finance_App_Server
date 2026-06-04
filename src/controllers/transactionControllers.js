@@ -3,7 +3,7 @@ import {
   deleteTransactionsService,
   getTransactionsByIdService,
   getTransactionsService,
-  postTransactionsService,
+  postTransactionService,
   updateTransactionsService,
 } from "../services/transactionServices.js";
 import createHttpError from "http-errors";
@@ -38,7 +38,7 @@ export const getTransactionByID = async (req, res) => {
 
 export const deleteTransaction = async (req, res) => {
   const { id } = req.params;
-  const deletedTransaction = await deleteTransactionsService(id);
+  const deletedTransaction = await deleteTransactionService(id);
 
   if (!deleteTransaction) {
     throw createHttpError(404, "Transaction not found");
@@ -70,7 +70,7 @@ export const putTransaction = async (req, res) => {
   const body = req.body;
   const { id } = req.params;
 
-  const { data, isUpdated } = updateTransactionsService(id, body, {
+  const { data, isUpdated } = await updateTransactionsService(id, body, {
     upsert: true,
   });
 
