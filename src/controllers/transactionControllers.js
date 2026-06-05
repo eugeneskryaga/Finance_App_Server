@@ -1,10 +1,10 @@
 import { Transaction } from "../db/models/Transaction.js";
 import {
-  deleteTransactionsService,
-  getTransactionsByIdService,
+  deleteTransactionService,
+  getTransactionByIdService,
   getTransactionsService,
   postTransactionService,
-  updateTransactionsService,
+  updateTransactionService,
 } from "../services/transactionServices.js";
 import createHttpError from "http-errors";
 
@@ -49,7 +49,7 @@ export const deleteTransaction = async (req, res) => {
 
 export const postTransaction = async (req, res) => {
   const body = req.body;
-  const newTransaction = await postTransactionsService(body);
+  const newTransaction = await postTransactionService(body);
   res.status(201).json(newTransaction);
 };
 

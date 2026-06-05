@@ -34,33 +34,93 @@ export const getTransactionsService = async ({
 
   const transactionsQuery = Transaction.find(filter);
 
-  const [totalTransactions, transactions] = await Promise.all([
-    transactionsQuery.clone().countDocuments(),
-    transactionsQuery
-      .skip(skip)
-      .limit(perPage)
-      .sort({ [sortBy]: sortOrder === "asc" ? 1 : -1 }),
-  ]);
+  let statistics = null;
 
-  const totalPages = Math.ceil(totalTransactions / perPage);
-  const isNextPageExists = page < totalPages;
+  if (startDate && endDate && startDate !== endDate) {
+    const end = new Date(endDate);
+    end.setDate(end.getDate() + 1);
 
-  return {
-    transactions,
-    totalTransactions,
-    totalPages,
-    currentPage: page,
-    isNextPageExists,
-  };
+    const statsPipeline = [
+      { $match: { date: { $gte: new Date(startDate), $lt: end } } },
+      {
+        $facet: {
+          totals: [
+            {
+              $group: {
+                _id: null,
+                income: {
+                  $sum: {
+                    $cond: [{ $eq: ["$type", "income"] }, "$amount", 0],
+                  },
+                },
+                expenses: {
+                  $sum: {
+                    $cond: [{ $eq: ["$type", "expense"] }, "$amount", 0],
+                  },
+                },
+              },
+            },
+          ],
+          categoryExpenses: [
+            { $match: { type: "expense" } },
+            {
+              $group: {
+                _id: "$category",
+                total: { $sum: "$amount" },
+              },
+            },
+          ],
+        },
+      },
+    ];
+
+    const [aggregateResult] = await Transaction.aggregate(statsPipeline);
+
+    const totals = aggregateResult.totals[0] || { income: 0, expenses: 0 };
+    const expensesByCategory = (aggregateResult.categoryExpenses || []).reduce(
+      (acc, item) => {
+        acc[item._id] = item.total;
+        return acc;
+      },
+      {},
+    );
+
+    statistics = {
+      income: totals.income,
+      expenses: totals.expenses,
+      balance: totals.income - totals.expenses,
+      expensesByCategory,
+    };
+
+    const [totalTransactions, transactions] = await Promise.all([
+      transactionsQuery.clone().countDocuments(),
+      transactionsQuery
+        .skip(skip)
+        .limit(perPage)
+        .sort({ [sortBy]: sortOrder === "asc" ? 1 : -1 }),
+    ]);
+
+    const totalPages = Math.ceil(totalTransactions / perPage);
+    const isNextPageExists = page < totalPages;
+
+    return {
+      transactions,
+      totalTransactions,
+      totalPages,
+      currentPage: page,
+      isNextPageExists,
+      statistics,
+    };
+  }
 };
 
-export const getTransactionsByIdService = id => Transaction.findById(id);
+export const getTransactionByIdService = id => Transaction.findById(id);
 
 export const deleteTransactionService = id => Transaction.findByIdAndDelete(id);
 
-export const postTransactionsService = data => Transaction.create(data);
+export const postTransactionService = data => Transaction.create(data);
 
-export const updateTransactionsService = async (id, data, options) => {
+export const updateTransactionService = async (id, data, options) => {
   const result = await Transaction.findByIdAndUpdate(id, data, {
     returnDocument: "after",
     includeResultMetadata: true,
