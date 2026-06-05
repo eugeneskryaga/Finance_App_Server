@@ -33,7 +33,6 @@ export const getTransactionsService = async ({
   }
 
   const transactionsQuery = Transaction.find(filter);
-
   let statistics = null;
 
   if (startDate && endDate && startDate !== endDate) {
@@ -91,27 +90,27 @@ export const getTransactionsService = async ({
       balance: totals.income - totals.expenses,
       expensesByCategory,
     };
-
-    const [totalTransactions, transactions] = await Promise.all([
-      transactionsQuery.clone().countDocuments(),
-      transactionsQuery
-        .skip(skip)
-        .limit(perPage)
-        .sort({ [sortBy]: sortOrder === "asc" ? 1 : -1 }),
-    ]);
-
-    const totalPages = Math.ceil(totalTransactions / perPage);
-    const isNextPageExists = page < totalPages;
-
-    return {
-      transactions,
-      totalTransactions,
-      totalPages,
-      currentPage: page,
-      isNextPageExists,
-      statistics,
-    };
   }
+
+  const [totalTransactions, transactions] = await Promise.all([
+    transactionsQuery.clone().countDocuments(),
+    transactionsQuery
+      .skip(skip)
+      .limit(perPage)
+      .sort({ [sortBy]: sortOrder === "asc" ? 1 : -1 }),
+  ]);
+
+  const totalPages = Math.ceil(totalTransactions / perPage);
+  const isNextPageExists = page < totalPages;
+
+  return {
+    transactions,
+    totalTransactions,
+    totalPages,
+    currentPage: page,
+    isNextPageExists,
+    statistics,
+  };
 };
 
 export const getTransactionByIdService = id => Transaction.findById(id);
@@ -127,7 +126,7 @@ export const updateTransactionService = async (id, data, options) => {
     ...options,
   });
 
-  if (!result.value) {
+  if (!result || !result.value) {
     return null;
   }
 
