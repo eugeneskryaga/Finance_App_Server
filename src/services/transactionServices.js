@@ -32,7 +32,6 @@ export const getTransactionsService = async ({
     };
   }
 
-  const transactionsQuery = Transaction.find(filter);
   let statistics = null;
 
   if (startDate && endDate && startDate !== endDate) {
@@ -91,6 +90,8 @@ export const getTransactionsService = async ({
       expensesByCategory,
     };
   }
+
+  const transactionsQuery = Transaction.find(filter);
 
   const [totalTransactions, transactions] = await Promise.all([
     transactionsQuery.clone().countDocuments(),
