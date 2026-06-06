@@ -27,7 +27,7 @@ export const getTransactions = async (req, res) => {
 
 export const getTransactionByID = async (req, res) => {
   const { id } = req.params;
-  const transaction = await getTransactionsByIdService(id);
+  const transaction = await getTransactionByIdService(id);
 
   if (!transaction) {
     throw createHttpError(404, "Transaction not found");
@@ -40,7 +40,7 @@ export const deleteTransaction = async (req, res) => {
   const { id } = req.params;
   const deletedTransaction = await deleteTransactionService(id);
 
-  if (!deleteTransaction) {
+  if (!deleteDTransaction) {
     throw createHttpError(404, "Transaction not found");
   }
 
@@ -57,7 +57,7 @@ export const patchTransaction = async (req, res) => {
   const body = req.body;
   const { id } = req.params;
 
-  const result = await updateTransactionsService(id, body);
+  const result = await updateTransactionService(id, body);
 
   if (!result) {
     throw createHttpError(404, "Transaction not found");
@@ -70,7 +70,7 @@ export const putTransaction = async (req, res) => {
   const body = req.body;
   const { id } = req.params;
 
-  const { data, isUpdated } = await updateTransactionsService(id, body, {
+  const { data, isUpdated } = await updateTransactionService(id, body, {
     upsert: true,
   });
 
