@@ -40,7 +40,7 @@ export const deleteTransaction = async (req, res) => {
   const { id } = req.params;
   const deletedTransaction = await deleteTransactionService(id);
 
-  if (!deleteDTransaction) {
+  if (!deletedTransaction) {
     throw createHttpError(404, "Transaction not found");
   }
 
