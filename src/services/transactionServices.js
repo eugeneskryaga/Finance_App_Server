@@ -27,9 +27,10 @@ export const getTransactionsService = async ({
   }
 
   if (search?.trim()) {
-    filter.$text = {
-      $search: search.trim(),
-    };
+    filter.$or = [
+      { note: { $regex: search.trim(), $options: "i" } },
+      { category: { $regex: search.trim(), $options: "i" } },
+    ];
   }
 
   let statistics = null;
