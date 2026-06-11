@@ -8,9 +8,10 @@ export const getTransactionsService = async ({
   search,
   startDate,
   endDate,
+  authorId,
 }) => {
   const skip = (page - 1) * perPage;
-  const filter = {};
+  const filter = { authorId };
 
   if (startDate || endDate) {
     filter.date = {};

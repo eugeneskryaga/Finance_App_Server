@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
 import transactionsRouter from "./routers/transactionsRouters.js";
+import authRouter from "./routers/auth.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 import { connectDb } from "./db/connectDb.js";
 import { errors } from "celebrate";
 import "dotenv/config";
+import cookieParser from "cookie-parser";
 
 const PORT = process.env.PORT;
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS.split(",");
@@ -13,6 +15,7 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS.split(",");
 const server = express();
 
 server.use(express.json());
+server.use(cookieParser());
 
 server.use(
   cors({
@@ -29,7 +32,8 @@ server.use(
   }),
 );
 
-server.use(transactionsRouter);
+server.use("/auth", authRouter);
+server.use("/transactions", transactionsRouter);
 
 server.use(notFoundHandler);
 

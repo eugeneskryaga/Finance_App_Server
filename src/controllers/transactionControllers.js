@@ -20,6 +20,7 @@ export const getTransactions = async (req, res) => {
     search,
     startDate,
     endDate,
+    authorId: req.user?._id,
   });
 
   res.json(response);
@@ -49,6 +50,7 @@ export const deleteTransaction = async (req, res) => {
 
 export const postTransaction = async (req, res) => {
   const body = req.body;
+  body.authorId = req.user?._id;
   const newTransaction = await postTransactionService(body);
   res.status(201).json(newTransaction);
 };
@@ -56,6 +58,8 @@ export const postTransaction = async (req, res) => {
 export const patchTransaction = async (req, res) => {
   const body = req.body;
   const { id } = req.params;
+
+  if (body.authorId) delete body.authorId;
 
   const result = await updateTransactionService(id, body);
 
@@ -69,6 +73,9 @@ export const patchTransaction = async (req, res) => {
 export const putTransaction = async (req, res) => {
   const body = req.body;
   const { id } = req.params;
+
+  // ensure owner is set on upsert
+  body.authorId = req.user?._id;
 
   const { data, isUpdated } = await updateTransactionService(id, body, {
     upsert: true,

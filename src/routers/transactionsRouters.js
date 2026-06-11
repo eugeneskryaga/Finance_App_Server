@@ -14,24 +14,19 @@ import {
   postTransaction,
   putTransaction,
 } from "../controllers/transactionControllers.js";
+import { checkToken } from "../middlewares/checkToken.js";
 
 const router = Router();
 
-router.get("/transactions", celebrate(getTransactionsSchema), getTransactions);
-router.get("/transactions/:id", celebrate(idSchema), getTransactionByID);
-router.post(
-  "/transactions",
-  celebrate(createTransactionSchema),
-  postTransaction,
-);
-router.delete("/transactions/:id", celebrate(idSchema), deleteTransaction);
-router.patch(
-  "/transactions/:id",
-  celebrate(updateTransactionSchema),
-  patchTransaction,
-);
+router.use(checkToken);
+
+router.get("/", celebrate(getTransactionsSchema), getTransactions);
+router.get("/:id", celebrate(idSchema), getTransactionByID);
+router.post("/", celebrate(createTransactionSchema), postTransaction);
+router.delete("/:id", celebrate(idSchema), deleteTransaction);
+router.patch("/:id", celebrate(updateTransactionSchema), patchTransaction);
 router.put(
-  "/transactions/:id",
+  "/:id",
   celebrate(createTransactionSchema),
   celebrate(idSchema),
   putTransaction,

@@ -24,6 +24,11 @@ const transactionSchema = new Schema(
       type: Date,
       required: true,
     },
+    authorId: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   { timestamps: true, versionKey: false },
 );
