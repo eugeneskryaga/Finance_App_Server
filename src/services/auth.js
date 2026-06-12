@@ -8,6 +8,10 @@ export const findUserByEmail = email => User.findOne({ email });
 export const createUser = userData => User.create(userData);
 
 export const createSession = userId => {
+  if (!userId) {
+    throw new Error("User ID is required to create a session");
+  }
+
   const session = {
     userId,
     accessToken: randomBytes(30).toString("base64"),

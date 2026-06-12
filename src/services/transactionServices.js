@@ -41,7 +41,7 @@ export const getTransactionsService = async ({
     end.setDate(end.getDate() + 1);
 
     const statsPipeline = [
-      { $match: { date: { $gte: new Date(startDate), $lt: end } } },
+      { $match: { date: { $gte: new Date(startDate), $lt: end }, authorId } },
       {
         $facet: {
           totals: [
