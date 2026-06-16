@@ -6,6 +6,7 @@ import {
   deleteSessionByUserId,
   deleteSessionById,
   findSessionById,
+  findUserById,
 } from "../services/auth.js";
 import bcrypt from "bcrypt";
 import { clearCookies, setCookies } from "../utils/index.js";
@@ -83,6 +84,8 @@ export const refreshSession = async (req, res) => {
 
   await deleteSessionById(session._id);
   const newSession = await createSession(session.userId);
+  const user = await findUserById(newSession.userId);
+
   setCookies(newSession, res);
-  res.sendStatus(204);
+  res.json({ email: user.email, _id: user._id });
 };
