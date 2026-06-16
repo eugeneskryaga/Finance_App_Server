@@ -67,18 +67,10 @@ export const logout = async (req, res) => {
 export const refreshSession = async (req, res) => {
   const { sessionId } = req.cookies;
 
-  if (!sessionId) {
-    throw createHttpError(401, "Session ID not provided");
-  }
-
   const session = await findSessionById(sessionId);
 
   if (!session) {
     throw createHttpError(401, "Session not found");
-  }
-
-  if (!session.userId) {
-    throw createHttpError(400, "Invalid session data");
   }
 
   const isRefreshTokenValid = session.refreshTokenExpiresAt > new Date();
@@ -86,16 +78,11 @@ export const refreshSession = async (req, res) => {
   if (!isRefreshTokenValid) {
     await deleteSessionById(session._id);
     clearCookies(res);
-    throw createHttpError(401, "Refresh token expired");
+    throw createHttpError(401, "Refresh token not valid");
   }
 
-  try {
-    await deleteSessionById(session._id);
-    const newSession = await createSession(session.userId);
-    setCookies(newSession, res);
-    res.sendStatus(204);
-  } catch (error) {
-    clearCookies(res);
-    throw createHttpError(500, "Failed to refresh session");
-  }
+  await deleteSessionById(session._id);
+  const newSession = await createSession(session.userId);
+  setCookies(newSession, res);
+  res.sendStatus(204);
 };
