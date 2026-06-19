@@ -68,6 +68,8 @@ export const logout = async (req, res) => {
 export const refreshSession = async (req, res) => {
   const { sessionId } = req.cookies;
 
+  console.log(req.cookies);
+
   const session = await findSessionById(sessionId);
 
   if (!session) {
