@@ -5,6 +5,7 @@ export const setCookies = (session, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
   };
   res.cookie("sessionId", session._id, { ...options, maxAge: TWO_DAYS });
   res.cookie("accessToken", session.accessToken, {
