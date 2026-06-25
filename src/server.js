@@ -14,6 +14,8 @@ const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS.split(",");
 
 const server = express();
 
+server.set("trust proxy", 1);
+
 server.use(express.json());
 server.use(cookieParser());
 
@@ -31,8 +33,6 @@ server.use(
     credentials: true,
   }),
 );
-
-server.set("trust proxy", 1);
 
 server.use("/auth", authRouter);
 server.use("/transactions", transactionsRouter);

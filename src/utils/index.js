@@ -3,9 +3,8 @@ import { TWENTY_MINUTES, TWO_DAYS } from "../constants/index.js";
 export const setCookies = (session, res) => {
   const options = {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    path: "/",
+    secure: true,
+    sameSite: "none",
   };
   res.cookie("sessionId", session._id, { ...options, maxAge: TWO_DAYS });
   res.cookie("accessToken", session.accessToken, {

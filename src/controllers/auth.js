@@ -52,6 +52,8 @@ export const signIn = async (req, res) => {
 
   setCookies(session, res);
 
+  console.log(res.getHeaders());
+
   res.status(200).json({ name: user.name, email });
 };
 
