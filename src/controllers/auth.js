@@ -11,6 +11,15 @@ import {
 import bcrypt from "bcrypt";
 import { clearCookies, setCookies } from "../utils/index.js";
 
+export const cookieFix = (req, res) => {
+  const redirectUrl =
+    req.query.redirect ||
+    "https://finance-personal-app-beta.vercel.app/" ||
+    "https://vest-superjet-subtype.ngrok-free.dev/";
+
+  res.redirect(redirectUrl);
+};
+
 export const signUp = async (req, res) => {
   const { name, email, password } = req.body;
 
