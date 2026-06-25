@@ -1,11 +1,5 @@
 import { Router } from "express";
-import {
-  cookieFix,
-  logout,
-  refreshSession,
-  signIn,
-  signUp,
-} from "../controllers/auth.js";
+import { logout, refreshSession, signIn, signUp } from "../controllers/auth.js";
 import { celebrate } from "celebrate";
 import { signInSchema, signUpSchema } from "../validation/auth.js";
 
